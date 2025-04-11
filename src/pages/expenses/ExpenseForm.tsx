@@ -99,17 +99,25 @@ const ExpenseForm = () => {
   const onSubmit = async (values: FormValues) => {
     try {
       setLoading(true);
+      // Ensure all required fields are present
+      const expenseData: Omit<Expense, "id"> = {
+        amount: values.amount,
+        description: values.description,
+        date: values.date,
+        projectId: values.projectId,
+      };
+      
       if (isEditing) {
         await updateExpense({
           id: Number(id),
-          ...values,
+          ...expenseData,
         } as Expense);
         toast({
           title: "Success",
           description: "Expense updated successfully",
         });
       } else {
-        await createExpense(values);
+        await createExpense(expenseData);
         toast({
           title: "Success",
           description: "Expense added successfully",

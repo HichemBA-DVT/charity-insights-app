@@ -79,17 +79,25 @@ const ProjectForm = () => {
   const onSubmit = async (values: FormValues) => {
     try {
       setLoading(true);
+      // Ensure all required fields are present
+      const projectData: Omit<Project, "id"> = {
+        name: values.name,
+        description: values.description,
+        targetAmount: values.targetAmount,
+        targetDate: values.targetDate,
+      };
+      
       if (isEditing) {
         await updateProject({
           id: Number(id),
-          ...values,
+          ...projectData,
         } as Project);
         toast({
           title: "Success",
           description: "Project updated successfully",
         });
       } else {
-        await createProject(values);
+        await createProject(projectData);
         toast({
           title: "Success",
           description: "Project created successfully",

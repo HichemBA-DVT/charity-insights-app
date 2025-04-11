@@ -110,17 +110,26 @@ const DonationForm = () => {
   const onSubmit = async (values: FormValues) => {
     try {
       setLoading(true);
+      // Ensure all required fields are present
+      const donationData: Omit<Donation, "id"> = {
+        amount: values.amount,
+        donorName: values.donorName,
+        paymentMethod: values.paymentMethod,
+        date: values.date,
+        projectId: values.projectId,
+      };
+      
       if (isEditing) {
         await updateDonation({
           id: Number(id),
-          ...values,
+          ...donationData,
         } as Donation);
         toast({
           title: "Success",
           description: "Donation updated successfully",
         });
       } else {
-        await createDonation(values);
+        await createDonation(donationData);
         toast({
           title: "Success",
           description: "Donation added successfully",
